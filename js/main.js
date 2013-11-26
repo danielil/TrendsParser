@@ -14,7 +14,7 @@
 	var twitterTrendsWW = [];
 	var convergedTrends = [];
 
-	var rootURL = "localhost/"; // Change the root URL to wherever the files are located (e.g. http://example.com/TrendsParser/)
+	var rootURL = "localhost/";
 
 	$(document).ready(function() {
 		displayGoogleTrends("xml");
