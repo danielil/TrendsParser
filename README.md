@@ -17,6 +17,6 @@ Config
 
 Be sure to edit line 17 in main.js before running the TrendsParser if you are running it from a local server.
 
-  var rootURL = "localhost/";
+    var rootURL = "localhost/";
 
 Change the root URL to wherever the files are located (e.g. http://example.com/TrendsParser/)
