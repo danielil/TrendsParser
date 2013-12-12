@@ -80,6 +80,10 @@ footer {
 	float: left;
 }
 
+#google-us-loading, #twitter-us-loading, #twitter-us-loading {
+	margin: 5%;
+}
+
 #convergence {
 	clear: left;
 }

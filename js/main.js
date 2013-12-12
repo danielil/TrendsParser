@@ -3,7 +3,7 @@
  *
  * @author Daniel Sebastian Iliescu, http://dansil.net
  * @created 2013-08-27
- * @updated 2013-08-28
+ * @updated 2013-12-12
  */
 
  (function() {
@@ -17,6 +17,10 @@
 	var rootURL = "localhost/";
 
 	$(document).ready(function() {
+		displayLoading($("#google-us"));
+		displayLoading($("#twitter-us"));
+		displayLoading($("#twitter-ww"));
+
 		displayGoogleTrends("xml");
 		displayTwitterTrends(23424977, "us");
 		displayTwitterTrends(1, "ww");
@@ -25,6 +29,16 @@
 			displayConvergence();
 		});
 	});
+
+	function displayLoading(element) {
+		var loadingImg = $(document.createElement("img"));
+
+		loadingImg.prop("id", element.prop("id") + "-loading");
+		loadingImg.prop("alt", "loading...");
+		loadingImg.prop("src", "img/loading.gif");
+
+		element.append(loadingImg);
+	}
 
 	function displayGoogleTrends(type) {
 		$.ajax({
@@ -38,6 +52,8 @@
 				var content = $(contents).find("a");
 
 				createTable(content, "google-us");
+
+				$("#google-us-loading").remove();
 			}
 		});
 	}
@@ -53,6 +69,8 @@
 				var content = data.trends;
 
 				createTable(content, "twitter-" + area);
+
+				$("#twitter-" + area + "-loading").remove();
 			}
 		});
 	}
@@ -95,7 +113,6 @@
 
 	function createTable(content, type) {
 		var trendsTable = $(document.createElement("table"));
-
 		var trendsTableHeadingRow = $(document.createElement("tr"));
 		var tableRankHeading = $(document.createElement("th"));
 		var tableContentHeading = $(document.createElement("th"));
