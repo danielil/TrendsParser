@@ -24,4 +24,4 @@ Change the root URL to wherever the files are located (e.g. http://example.com/T
 Demo
 ------------------
 
-To see the Trends Parser in action, direct your browser to [http://dansil.net/projects/TrendsParser/trends-parser.php](dansil.net/projects/TrendsParser/trends-parser.php)
+To see the Trends Parser in action, direct your browser to [http://dansil.net/projects/TrendsParser/trends-parser.php](http://dansil.net/projects/TrendsParser/trends-parser.php)
