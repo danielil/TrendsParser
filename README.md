@@ -20,3 +20,8 @@ Be sure to edit line 17 in main.js before running the TrendsParser if you are ru
     var rootURL = "localhost/";
 
 Change the root URL to wherever the files are located (e.g. http://example.com/TrendsParser/).
+
+Demo
+------------------
+
+To see the Trends Parser in action, direct your browser to [http://dansil.net/projects/TrendsParser/trends-parser.php](dansil.net/projects/TrendsParser/trends-parser.php)
