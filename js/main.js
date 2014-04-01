@@ -6,24 +6,41 @@
  * @updated 2013-12-12
  */
 
- (function() {
+//(function() {
 	"use strict";
 
-	var googleTrendsUS = [];
-	var twitterTrendsUS = [];
-	var twitterTrendsWW = [];
+	var googleTrends = [];
+	var twitterTrends = [];
 	var convergedTrends = [];
 
-	var rootURL = "localhost/";
+	var googleRegions = [];
+	googleRegions["Worldwide"] = 0;
+	googleRegions["Australia"] = 8;
+	googleRegions["Canada"] = 13;
+	googleRegions["Germany"] = 15;
+	googleRegions["Hong Kong"] = 10;
+	googleRegions["India"] = 3;
+	googleRegions["Israel"] = 6;
+	googleRegions["Japan"] = 4;
+	googleRegions["Netherlands"] = 17;
+	googleRegions["Russia"] = 14;
+	googleRegions["Singapore"] = 5;
+	googleRegions["Taiwan"] = 12;
+	googleRegions["United Kingdom"] = 9;
+	googleRegions["United States"] = 1;
+
+	var twitterRegions = [];
+	var googleTrendsWW = [];
+
+	//localhost/
+	var rootURL = "http://designboa.com/projects/TrendsParser/";
 
 	$(document).ready(function() {
-		displayLoading($("#google-us"));
-		displayLoading($("#twitter-us"));
-		displayLoading($("#twitter-ww"));
+		displayLoading($("#google"));
+		displayLoading($("#twitter"));
 
-		displayGoogleTrends("xml");
-		displayTwitterTrends(23424977, "us");
-		displayTwitterTrends(1, "ww");
+		displayGoogleTrends(1); // US
+		displayTwitterTrends(1); // WW
 
 		$(document).ajaxStop(function() {
 			displayConvergence();
@@ -40,25 +57,24 @@
 		element.append(loadingImg);
 	}
 
-	function displayGoogleTrends(type) {
+	function displayGoogleTrends(region) {
 		$.ajax({
 			type: "GET",
-			url: rootURL + "fetch-google-trends.php?type=" + type,
+			url: rootURL + "fetch-google-trends.php",
 			async: true,
-			contentType: "application/" + type + "; charset=utf-8",
-			dataType: type,
+			contentType: "application/json; charset=utf-8",
+			dataType: "json",
 			success: function(data) {
-				var contents = $(data).find("content").get(0).firstChild.data;
-				var content = $(contents).find("a");
+				googleTrends = data[region].slice(0);
 
-				createTable(content, "google-us");
+				createTable(googleTrends, "google");
 
-				$("#google-us-loading").remove();
+				$("#google-loading").remove();
 			}
 		});
 	}
 
-	function displayTwitterTrends(woeid, area) {
+	function displayTwitterTrends(woeid) {
 		$.ajax({
 			type: "GET",
 			url: rootURL + "fetch-twitter-trends.php?woeid=" + woeid,
@@ -66,11 +82,13 @@
 			contentType: "application/json; charset=utf-8",
 			dataType: "json",
 			success: function(data) {
-				var content = data.trends;
+				for (var i = 0; i < data.trends.length; i++) {
+					twitterTrends.push(data.trends[i].name);
+				}
 
-				createTable(content, "twitter-" + area);
+				createTable(twitterTrends, "twitter");
 
-				$("#twitter-" + area + "-loading").remove();
+				$("#twitter-loading").remove();
 			}
 		});
 	}
@@ -78,9 +96,7 @@
 	function displayConvergence() {
 		var termsList = $(document.createElement("ul"));
 
-		compareConvergence(googleTrendsUS, twitterTrendsUS);
-		compareConvergence(googleTrendsUS, twitterTrendsWW);
-		compareConvergence(twitterTrendsUS, twitterTrendsWW);
+		compareConvergence(googleTrends, twitterTrends);
 
 		if (convergedTrends.length == 0) {
 			var termsElement = $(document.createElement("li"));
@@ -111,7 +127,22 @@
 		}
 	}
 
-	function createTable(content, type) {
+	function generateGoogleWWTrends() {
+		$.ajax({
+			type: "GET",
+			url: rootURL + "fetch-google-trends.php",
+			async: true,
+			contentType: "application/json; charset=utf-8",
+			dataType: "json",
+			success: function(data) {
+				for (var i = 0; i < googleRegions.length; i++) {
+					googleTrends.push(data[googleRegions[i]].slice(0));
+				}
+			}
+		});
+	}
+
+	function createTable(trends, type) {
 		var trendsTable = $(document.createElement("table"));
 		var trendsTableHeadingRow = $(document.createElement("tr"));
 		var tableRankHeading = $(document.createElement("th"));
@@ -124,46 +155,27 @@
 		trendsTableHeadingRow.append(tableContentHeading);
 		trendsTable.append(trendsTableHeadingRow);
 
-		for (var i = 0; i < content.length; i++) {
+		for (var i = 0; i < trends.length; i++) {
 			var trendsTableRow = $(document.createElement("tr"));
 			var trendsRankTableDefinition = $(document.createElement("td"));
 			var trendsContentTableDefinition = $(document.createElement("td"));
 			var url = "";
-			var trendRaw = "";
-			var trend = "";
 
-			if (type === "google-us") {
-				url = content[i].href;
-				trend = content[i].innerHTML;
-				googleTrendsUS[i] = trend;
+			if (type === "google") {
+				url = "http://www.google.com/search?q=" + trends[i];
+			} else if (type === "twitter") {
+				var trend = "";
 
-				trendsContentTableDefinition.html(trend);
-			} else if (type === "twitter-us" || type === "twitter-ww") {
-				url = content[i].url;
-
-				if (url.split(".").length != 2) {
-					url = url.split(".");
-					url = url[2].substring(3, url[2].length);
-					url = "https://twitter.com" + url;
-				}
-
-				trendRaw = content[i].name;
-
-				if (trendRaw[0] === "#") {
-					trend = trendRaw.substring(1, trendRaw.length);
+				if (trends[i][0] === "#") {
+					trend = trends[i].substring(1, trends[i].length);
 				} else {
-					trend = trendRaw;
+					trend = trends[i];
 				}
 
-				if (type === "twitter-us") {
-					twitterTrendsUS[i] = trend;
-				} else if (type === "twitter-ww") {
-					twitterTrendsWW[i] = trend;
-				}
-
-				trendsContentTableDefinition.html(trendRaw);
+				url = "https://twitter.com/search?q=" + trend;
 			}
 
+			trendsContentTableDefinition.html(trends[i]);
 			trendsRankTableDefinition.html(i+1);
 
 			trendsTableRow.append(trendsRankTableDefinition);
@@ -182,4 +194,4 @@
 			window.location = URL;
 		};
 	}
-})();
+//})();

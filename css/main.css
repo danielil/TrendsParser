@@ -71,16 +71,16 @@ footer {
 	left: 2%;
 }
 
-#google-us, #twitter-us, #twitter-ww, #convergence {
+#google, #twitter, #convergence {
 	margin: 2%;
 	margin-left: 0;
 }
 
-#google-us, #twitter-us, #twitter-ww {
+#google, #twitter {
 	float: left;
 }
 
-#google-us-loading, #twitter-us-loading, #twitter-ww-loading {
+#google-loading, #twitter-loading {
 	margin: 5%;
 }
 

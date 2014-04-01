@@ -25,16 +25,12 @@
 		</header>
 
 		<div id="main">
-			<div id="google-us">
-				<h2>Google (United States)</h2>
+			<div id="google">
+				<h2>Google</h2>
 			</div>
 
-			<div id="twitter-us">
-				<h2>Twitter (United States)</h2>
-			</div>
-
-			<div id="twitter-ww">
-				<h2>Twitter (Worldwide)</h2>
+			<div id="twitter">
+				<h2>Twitter</h2>
 			</div>
 
 			<div id="convergence">
