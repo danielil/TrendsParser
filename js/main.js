@@ -6,7 +6,7 @@
  * @updated 2013-12-12
  */
 
-//(function() {
+(function() {
 	"use strict";
 
 	var googleTrends = [];
@@ -194,4 +194,4 @@
 			window.location = URL;
 		};
 	}
-//})();
+})();
