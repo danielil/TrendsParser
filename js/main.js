@@ -33,7 +33,7 @@
 	var googleTrendsWW = [];
 
 	//localhost/
-	var rootURL = "http://designboa.com/projects/TrendsParser/";
+	var rootURL = "localhost/projects/TrendsParser/";
 
 	$(document).ready(function() {
 		displayLoading($("#google"));
